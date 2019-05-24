@@ -94,7 +94,7 @@ const App = () => {
     }
   }
 
-  const rows = () => personsToShow.map(person => <li key={person.name}>{person.name} {person.number} <button onClick={() => handleRemove(person)}>remove</button></li>)
+  const rows = () => personsToShow.map(person => <li key={person.id}>{person.name} {person.number} <button onClick={() => handleRemove(person)}>remove</button></li>)
 
   return (
     <div>
