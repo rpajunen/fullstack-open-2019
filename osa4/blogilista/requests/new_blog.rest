@@ -1,0 +1,11 @@
+POST http://localhost:3001/api/blogs/
+Content-Type: application/json
+Authorization: Bearer ...
+
+{
+  "title": "999999999999999",
+  "author": "roope",
+  "url": "www.osoite.fi",
+  "likes": 0,
+  "userId": "5cee857ce5a50012ea8da57e"
+}
