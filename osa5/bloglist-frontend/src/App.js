@@ -8,15 +8,20 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
+import { useField } from './hooks'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+
+  const username = useField('text')
+  const password = useField('password')
+
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
+
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   const blogFormRef = React.createRef()
 
@@ -39,7 +44,8 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username, password,
+        username: username.value,
+        password: password.value,
       })
 
       window.localStorage.setItem(
@@ -47,8 +53,6 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
     } catch (exception) {
       setMessage('käyttäjätunnus tai salasana virheellinen')
       setTimeout(() => {
@@ -66,18 +70,18 @@ const App = () => {
     event.preventDefault()
     blogFormRef.current.toggleVisibility()
     const newBlogObject = {
-      title: title,
-      author: author,
-      url: url,
+      title: title.value,
+      author: author.value,
+      url: url.value,
       likes: 0
     }
 
     try {
       const newBlog = await blogService.create(newBlogObject)
       setBlogs(blogs.concat(newBlog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      title.reset('')
+      author.reset('')
+      url.reset('')
       setMessage('new blog created')
       setTimeout(() => {
         setMessage(null)
@@ -155,8 +159,6 @@ const App = () => {
       {user === null ?
         <LoginForm
           handleSubmit={handleLogin}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
           username={username}
           password={password}
         /> :
@@ -169,9 +171,6 @@ const App = () => {
               title={title}
               author={author}
               url={url}
-              handleTitleChange={({ target }) => setTitle(target.value)}
-              handleAuthorChange={({ target }) => setAuthor(target.value)}
-              handleUrlChange={({ target }) => setUrl(target.value)}
             />
           </Togglable>
         </div>
