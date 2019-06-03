@@ -34,10 +34,8 @@ const Blog = ({ blog, user, handleLikeButtonClick, handleRemoveButtonClick }) =>
   }
 
   return (
-    <div style={blogStyle}>
-      {console.log('blog', blog)}
-      {console.log('user', user)}
-      <a onClick={() => setShowDetails(!showDetails)} >{blog.title} {blog.author}</a> <br />
+    <div style={blogStyle} className="blog">
+      <a className="clickable-tag" onClick={() => setShowDetails(!showDetails)} >{blog.title} {blog.author}</a> <br />
       {showDetails && fullDetails(user, blog, handleLikeButtonClick, handleRemoveButtonClick)}
     </div>
   )
