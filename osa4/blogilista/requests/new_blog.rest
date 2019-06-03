@@ -1,11 +1,10 @@
-POST http://localhost:3001/api/blogs/
+POST http://localhost:3003/api/blogs/
 Content-Type: application/json
-Authorization: Bearer ...
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNpbmkiLCJpZCI6IjVjZWVkN2VlZGVhNzY3MzkzZDdjZDlkMiIsImlhdCI6MTU1OTE1Njc2OH0.t_LZt5wgWjRlyg3zk7H4oneFiN-TIikhZDcvgXH-dso
 
 {
-  "title": "999999999999999",
-  "author": "roope",
-  "url": "www.osoite.fi",
-  "likes": 0,
-  "userId": "5cee857ce5a50012ea8da57e"
+  "title": "sinin blogi",
+  "author": "nasu",
+  "url": "wwww.blogi.hieno.com",
+  "likes": 0
 }
