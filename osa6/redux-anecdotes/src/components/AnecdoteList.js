@@ -27,7 +27,10 @@ const AnecdoteList = (props) => {
         <Anecdote
           key={anecdote.id}
           anecdote={anecdote}
-          handleClick={() => props.vote(anecdote.id)}
+          handleClick={() => {
+            props.setNotification(`you voted '${anecdote.content}'`, 5)
+            props.vote(anecdote)
+          }}
         />
       )}
     </div>
