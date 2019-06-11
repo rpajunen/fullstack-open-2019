@@ -12,9 +12,9 @@ const createNew = async (anecdote) => {
   return response.data
 }
 
-const vote = (newObject) => {
-  const request = axios.put(`${baseUrl}/${newObject.id}`, newObject)
-  return request.then(response => response.data)
+const vote = async (newObject) => {
+  const response = await axios.put(`${baseUrl}/${newObject.id}`, newObject)
+  return response.data;
 }
 
 export default { getAll, createNew, vote }
