@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs/
+Content-Type: application/json
+Authorization: Bearer ...
+
+{
+  "title": "sinin blogi",
+  "author": "nasu",
+  "url": "wwww.blogi.hieno.com",
+  "likes": 0
+}
