@@ -4,7 +4,9 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import registerService from './services/register'
 import LoginForm from './components/LoginForm'
+import RegisterForm from './components/RegisterForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
@@ -12,6 +14,10 @@ import { useField } from './hooks'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+
+  const registerName = useField('text')
+  const registerUsername = useField('text')
+  const registerPassword = useField('password')
 
   const username = useField('text')
   const password = useField('password')
@@ -60,6 +66,30 @@ const App = () => {
       setTimeout(() => {
         setMessage(null)
       }, 5000)
+    } finally {
+      username.reset()
+      password.reset()
+    }
+  }
+
+  const handleRegistration = async (event) => {
+    event.preventDefault()
+    try {
+      const user = await registerService.register({
+        username: registerUsername.value,
+        name: registerName.value,
+        password: registerPassword.value
+      })
+      // to-do: notification after successfull registration
+    } catch (e) {
+      setMessage('rekistoityminen epaonnistui')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    } finally {
+      registerName.reset()
+      registerPassword.reset()
+      registerUsername.reset()
     }
   }
 
@@ -159,11 +189,20 @@ const App = () => {
       <h1>Blogs</h1>
       <Notification message={message} />
       {user === null ?
-        <LoginForm
-          handleSubmit={handleLogin}
-          username={username}
-          password={password}
-        /> :
+        <div>
+          <LoginForm
+            handleSubmit={handleLogin}
+            username={username}
+            password={password}
+          />
+          <RegisterForm
+            handleSubmit={handleRegistration}
+            name={registerName}
+            username={registerUsername}
+            password={registerPassword}
+          />
+        </div>
+        :
         <div>
           <p>{user.name} logged in</p>
           <p><button onClick={handleLogout}>logout</button></p>
