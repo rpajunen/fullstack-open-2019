@@ -73,7 +73,8 @@ describe('when there is initially one user at db', () => {
       .expect(400)
 
     expect(result.error.text).toContain('Password must be at least 3')
-
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd.length).toBe(usersAtStart.length)
   })
 
 })
@@ -82,10 +83,10 @@ describe('when there is initially some blogs saved', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
 
-    const blogObjects = helper.initialBlogs
-      .map(blog => new Blog(blog))
-    const promiseArray = blogObjects.map(blog => blog.save())
-    await Promise.all(promiseArray)
+    // const blogObjects = helper.initialBlogs
+    //   .map(blog => new Blog(blog))
+    // const promiseArray = blogObjects.map(blog => blog.save())
+    // await Promise.all(promiseArray)
   })
 
   test('blogs are returned as json', async () => {
