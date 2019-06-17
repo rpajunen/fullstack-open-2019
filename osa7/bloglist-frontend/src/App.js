@@ -80,7 +80,10 @@ const App = () => {
         name: registerName.value,
         password: registerPassword.value
       })
-      // to-do: notification after successfull registration
+      setMessage(`rekisterointi onnistui kayttajanimella: ${user.username}`)
+      setTimeout(() => {
+        setMessage('')
+      }, 5000)
     } catch (e) {
       setMessage('rekistoityminen epaonnistui')
       setTimeout(() => {
