@@ -49,7 +49,7 @@ blogsRouter.post('/', async (request, response, next) => {
       author: body.author,
       url: body.url,
       likes: body.likes || 0,
-      user: user._id
+      user: user
     })
 
     if (blog.title && blog.url) {
@@ -95,15 +95,27 @@ blogsRouter.put('/:id', async (request, response, next) => {
   const body = request.body
 
   const blog = {
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes
+    ...body,
+    user: body.user.id,
+    likes: body.likes + 1,
   }
 
   try {
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-    response.json(updatedBlog.toJSON())
+    const updatedBlog = await Blog.findOneAndUpdate(request.params.id, blog, { new: true })
+
+    const returnedBlog = {
+      id: request.params.id,
+      title: updatedBlog.title,
+      author: updatedBlog.author,
+      url: updatedBlog.url,
+      likes: updatedBlog.likes,
+      user: {
+        id: body.user.id,
+        username: body.user.username,
+        name: body.user.name
+      }
+    }
+    response.json(returnedBlog)
   } catch (exception) {
     next(exception)
   }
