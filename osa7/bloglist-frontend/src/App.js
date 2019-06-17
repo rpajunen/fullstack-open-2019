@@ -127,16 +127,8 @@ const App = () => {
   }
 
   const handleLikeButtonClick = async (blog) => {
-    const obj = {
-      user: user.id,
-      likes: blog.likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url
-    }
-
     try {
-      const updatedBlog = await blogService.update(blog.id, obj)
+      const updatedBlog = await blogService.update(blog.id, blog)
       setBlogs(blogs.filter(blog => blog.id !== updatedBlog.id).concat(updatedBlog))
       setMessage('blog liked')
       setTimeout(() => {
@@ -186,6 +178,7 @@ const App = () => {
 
   return (
     <div>
+      {console.log('all blogs', blogs)}
       <h1>Blogs</h1>
       <Notification message={message} />
       {user === null ?
