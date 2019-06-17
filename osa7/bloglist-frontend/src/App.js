@@ -178,7 +178,6 @@ const App = () => {
 
   return (
     <div>
-      {console.log('all blogs', blogs)}
       <h1>Blogs</h1>
       <Notification message={message} />
       {user === null ?
