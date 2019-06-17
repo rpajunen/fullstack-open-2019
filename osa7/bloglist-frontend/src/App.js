@@ -9,10 +9,12 @@ import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import { connect } from 'react-redux'
+import { setNotification } from './reducers/notificationReducer'
 
 import { useField } from './hooks'
 
-const App = () => {
+const App = (props) => {
   const [blogs, setBlogs] = useState([])
 
   const registerName = useField('text')
@@ -27,7 +29,6 @@ const App = () => {
   const url = useField('text')
 
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState('')
 
   const blogFormRef = React.createRef()
 
@@ -62,10 +63,7 @@ const App = () => {
       username.reset()
       password.reset()
     } catch (exception) {
-      setMessage('käyttäjätunnus tai salasana virheellinen')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      props.setNotification('käyttäjätunnus tai salasana virheellinen', 5)
     } finally {
       username.reset()
       password.reset()
@@ -80,15 +78,9 @@ const App = () => {
         name: registerName.value,
         password: registerPassword.value
       })
-      setMessage(`rekisterointi onnistui kayttajanimella: ${user.username}`)
-      setTimeout(() => {
-        setMessage('')
-      }, 5000)
+      props.setNotification(`rekisterointi onnistui kayttajanimella: ${user.username}`, 5)
     } catch (e) {
-      setMessage('rekistoityminen epaonnistui')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      props.setNotification('rekistoityminen epaonnistui', 5)
     } finally {
       registerName.reset()
       registerPassword.reset()
@@ -117,15 +109,9 @@ const App = () => {
       title.reset('')
       author.reset('')
       url.reset('')
-      setMessage('new blog created')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      props.setNotification(`uusi blogi lisatty: ${newBlog.title}`, 5)
     } catch (e) {
-      setMessage('error creating blog')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      props.setNotification('error creating blog', 5)
     }
   }
 
@@ -133,17 +119,10 @@ const App = () => {
     try {
       const updatedBlog = await blogService.update(blog.id, blog)
       setBlogs(blogs.filter(blog => blog.id !== updatedBlog.id).concat(updatedBlog))
-      setMessage('blog liked')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      props.setNotification(`you liked '${updatedBlog.title}'`, 5)
     } catch (e) {
-      setMessage('error liking blog')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      props.setNotification('error liking blog', 5)
     }
-
   }
 
   const handleRemoveButtonClick = async (id, title) => {
@@ -152,18 +131,11 @@ const App = () => {
       try {
         await blogService.remove(id)
         setBlogs(blogs.filter(blog => blog.id !== id))
-        setMessage('blog removed')
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+        props.setNotification(`you removed '${title}'`, 5)
       } catch (e) {
-        setMessage('error removing blog')
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+        props.setNotification('error removing blog', 5)
       }
     }
-
   }
 
   const sortedBlogs = (blogs) => {
@@ -178,11 +150,10 @@ const App = () => {
     return blogComponents.sort((a, b) => b.props.blog.likes - a.props.blog.likes)
   }
 
-
   return (
     <div>
       <h1>Blogs</h1>
-      <Notification message={message} />
+      <Notification />
       {user === null ?
         <div>
           <LoginForm
@@ -216,4 +187,4 @@ const App = () => {
   )
 }
 
-export default App
+export default connect(null, { setNotification })(App)
