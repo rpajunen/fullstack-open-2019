@@ -6,21 +6,10 @@ const fullDetails = (user, blog, handleLikeButtonClick, handleRemoveButtonClick)
   <div>
     {blog.url}<br />
     {blog.likes} likes <button onClick={() => handleLikeButtonClick(blog)}>like</button><br />
-    Added by {blog.id} <br />
-    {renderRemovebutton(blog, user, handleRemoveButtonClick)}
-    {/* {(user !== null && blog.user.username === user) && <button onClick={() => handleRemoveButtonClick(blog.id, blog.title)}>remove</button>} */}
+    Added by {blog.user.username} <br />
+    {(blog.user.username === user.username) && <button onClick={() => handleRemoveButtonClick(blog.id, blog.title)}>remove</button>}
   </div>
 )
-
-const renderRemovebutton = (blog, user, handleRemoveButtonClick) => {
-  if (blog.user !== null) {
-    if (user !== null) {
-      if (blog.user.username === user.username) {
-        return <button onClick={() => handleRemoveButtonClick(blog.id, blog.title)}>remove</button>
-      }
-    }
-  }
-}
 
 const Blog = ({ blog, user, handleLikeButtonClick, handleRemoveButtonClick }) => {
   const [showDetails, setShowDetails] = useState(false)
