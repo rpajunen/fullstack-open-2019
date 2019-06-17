@@ -95,15 +95,13 @@ blogsRouter.put('/:id', async (request, response, next) => {
   const body = request.body
 
   const blog = {
-    ...body,
-    user: body.user.id,
     likes: body.likes + 1,
   }
 
   try {
-    const updatedBlog = await Blog.findOneAndUpdate(request.params.id, blog, { new: true })
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
 
-    const returnedBlog = {
+    response.json({
       id: request.params.id,
       title: updatedBlog.title,
       author: updatedBlog.author,
@@ -114,8 +112,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
         username: body.user.username,
         name: body.user.name
       }
-    }
-    response.json(returnedBlog)
+    })
   } catch (exception) {
     next(exception)
   }
