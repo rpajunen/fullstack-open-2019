@@ -1,23 +1,18 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react'
 import PropTypes from 'prop-types'
-import _ from 'lodash'
 
-const LoginForm = ({
-  handleSubmit,
-  username,
-  password
-}) => {
+const LoginForm = ({ handleSubmit }) => {
   return (
     <div>
       <h2>Kirjaudu</h2>
 
       <form onSubmit={handleSubmit}>
         <div>
-          käyttäjätunnus <input {..._.omit(username, ['reset'])} />
+          käyttäjätunnus <input type='text' name='username' />
         </div>
         <div>
-          salasana <input {..._.omit(password, ['reset'])} />
+          salasana <input type='password' name='password' />
         </div>
         <button type="submit">kirjaudu</button>
       </form>

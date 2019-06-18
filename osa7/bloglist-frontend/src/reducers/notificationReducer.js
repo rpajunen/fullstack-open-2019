@@ -14,9 +14,7 @@ export const setNotification = (message, timeout) => {
   }
 }
 
-const initialState = ''
-
-const reducer = (state = initialState, action) => {
+const reducer = (state = '', action) => {
   switch (action.type) {
   case 'MESSAGE':
     state = action.data
