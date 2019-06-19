@@ -1,18 +1,23 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import { connect } from 'react-redux'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+
 import Notification from './components/Notification'
-import blogService from './services/blogs'
-import registerService from './services/register'
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
-import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
-import { connect } from 'react-redux'
+import BlogView from './components/BlogView'
+import HomeView from './components/HomeView'
+import Users from './components/Users'
+import User from './components/User'
+
+import blogService from './services/blogs'
+
 import { setNotification } from './reducers/notificationReducer'
 import { loginUser, setUser } from './reducers/loginReducer'
 
 import { useField } from './hooks'
+import { blogsById, userById, blogByBlogId } from './utils/helper'
 
 const mapStateToProps = (state) => {
   return {
@@ -58,135 +63,65 @@ const App = (props) => {
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      props.loginUser({
-        username: event.target.username.value,
-        password: event.target.password.value,
-      })
-    } catch (exception) {
-      props.setNotification('käyttäjätunnus tai salasana virheellinen', 5)
-    } finally {
-      username.reset()
-      password.reset()
-    }
-  }
-
-  const handleRegistration = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await registerService.register({
-        username: registerUsername.value,
-        name: registerName.value,
-        password: registerPassword.value
-      })
-      props.setNotification(`rekisterointi onnistui kayttajanimella: ${user.username}`, 5)
-    } catch (e) {
-      props.setNotification('rekistoityminen epaonnistui', 5)
-    } finally {
-      registerName.reset()
-      registerPassword.reset()
-      registerUsername.reset()
-    }
-  }
-
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     props.setUser(null)
   }
 
-  const handleBlogFormSubmit = async (event) => {
-    event.preventDefault()
-    blogFormRef.current.toggleVisibility()
-
-    const newBlogObject = {
-      title: title.value,
-      author: author.value,
-      url: url.value,
-      likes: 0
-    }
-
-    try {
-      const newBlog = await blogService.createNew(newBlogObject)
-      setBlogs(blogs.concat(newBlog))
-      title.reset('')
-      author.reset('')
-      url.reset('')
-      props.setNotification(`uusi blogi lisatty: ${newBlog.title}`, 5)
-    } catch (e) {
-      props.setNotification('error creating blog', 5)
-    }
-  }
-
-  const handleLikeButtonClick = async (blog) => {
-    try {
-      const updatedBlog = await blogService.like(blog.id, blog)
-      setBlogs(blogs.filter(blog => blog.id !== updatedBlog.id).concat(updatedBlog))
-      props.setNotification(`you liked '${updatedBlog.title}'`, 5)
-    } catch (e) {
-      props.setNotification('error liking blog', 5)
-    }
-  }
-
-  const handleRemoveButtonClick = async (id, title) => {
-    // eslint-disable-next-line no-alert
-    if (window.confirm(`Remove ${title}`)) {
-      try {
-        await blogService.remove(id)
-        setBlogs(blogs.filter(blog => blog.id !== id))
-        props.setNotification(`you removed '${title}'`, 5)
-      } catch (e) {
-        props.setNotification('error removing blog', 5)
-      }
-    }
-  }
-
-  const sortedBlogs = (blogs) => {
-    const blogComponents = blogs.map(blog =>
-      <Blog
-        key={blog.id}
-        blog={blog}
-        user={props.user}
-        handleLikeButtonClick={handleLikeButtonClick}
-        handleRemoveButtonClick={handleRemoveButtonClick} />
-    )
-    return blogComponents.sort((a, b) => b.props.blog.likes - a.props.blog.likes)
-  }
+  const padding = { padding: 5 }
 
   return (
     <div>
-      <h1>Blogs</h1>
-      <Notification />
-      {props.user === null ?
+      <Router>
         <div>
-          <LoginForm
-            handleSubmit={handleLogin}
-            username={username}
-            password={password}
-          />
-          <RegisterForm
-            handleSubmit={handleRegistration}
-            name={registerName}
-            username={registerUsername}
-            password={registerPassword}
-          />
+          <Notification />
+          {props.user === null ?
+            <div>
+              <h1>Blogs</h1>
+              <LoginForm
+                loginUser={props.loginUser}
+                setNotification={props.setNotification}
+                username={username}
+                password={password}
+              />
+              <RegisterForm
+                name={registerName}
+                username={registerUsername}
+                password={registerPassword}
+                setNotification={props.setNotification}
+              />
+            </div> :
+            <div>
+              <div>
+                <Link style={padding} to="/">home</Link>
+                <Link style={padding} to="/users">users</Link>
+                {props.user.name} logged in <button onClick={handleLogout}>logout</button>
+              </div>
+              <h1>Blogs</h1>
+              <Route exact path="/" render={() => <HomeView
+                blogFormRef={blogFormRef}
+                blogs={blogs}
+                setBlogs={setBlogs}
+                user={props.user}
+                title={title}
+                author={author}
+                url={url} />} />
+              <Route exact path="/users" render={() => <Users blogs={blogs} />} />
+              <Route exact path="/users/:id" render={({ match }) =>
+                <User user={userById(match.params.id, blogs)} blogs={blogsById(match.params.id, blogs)} />
+              } />
+              <Route exact path="/blogs/:id" render={({ match }) =>
+                <BlogView
+                  user={props.user}
+                  blog={blogByBlogId(match.params.id, blogs)}
+                  blogs={blogs}
+                  setBlogs={setBlogs}
+                  setNotification={setNotification} />
+              } />
+            </div>
+          }
         </div>
-        :
-        <div>
-          <p>{props.user.name} logged in</p>
-          <p><button onClick={handleLogout}>logout</button></p>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm
-              onSubmit={handleBlogFormSubmit}
-              title={title}
-              author={author}
-              url={url}
-            />
-          </Togglable>
-          {sortedBlogs(blogs)}
-        </div>
-      }
+      </Router>
     </div>
   )
 }

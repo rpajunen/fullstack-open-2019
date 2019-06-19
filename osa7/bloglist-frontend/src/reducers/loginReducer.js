@@ -1,20 +1,23 @@
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 
-export const loginUser = credetials => {
+export const loginUser = credentials => {
   return async dispatch => {
-    const user = await loginService.login(credetials)
+    try {
+      const user = await loginService.login(credentials)
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      )
 
-    window.localStorage.setItem(
-      'loggedBlogappUser', JSON.stringify(user)
-    )
+      blogService.setToken(user.token)
 
-    blogService.setToken(user.token)
-
-    dispatch({
-      type: 'LOGIN',
-      data: user
-    })
+      dispatch({
+        type: 'LOGIN',
+        data: user
+      })
+    } catch (e) {
+      console.log('error')
+    }
   }
 }
 

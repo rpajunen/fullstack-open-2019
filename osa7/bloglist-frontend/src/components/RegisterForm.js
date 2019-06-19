@@ -1,19 +1,36 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react'
-import PropTypes from 'prop-types'
+import registerService from '../services/register'
 import _ from 'lodash'
 
 const RegisterForm = ({
-  handleSubmit,
   username,
   password,
-  name
+  name,
+  setNotification
 }) => {
+  const handleRegistration = async (event) => {
+    event.preventDefault()
+    try {
+      const user = await registerService.register({
+        username: username.value,
+        name: name.value,
+        password: password.value
+      })
+      setNotification(`rekisterointi onnistui kayttajanimella: ${user.username}`, 5)
+    } catch (e) {
+      setNotification('rekistoityminen epaonnistui', 5)
+    } finally {
+      name.reset()
+      password.reset()
+      username.reset()
+    }
+  }
   return (
     <div>
       <h2>Rekisteroidy</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleRegistration}>
         <div>
           nimi <input {..._.omit(name, ['reset'])} />
         </div>
@@ -27,10 +44,6 @@ const RegisterForm = ({
       </form>
     </div>
   )
-}
-
-RegisterForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired
 }
 
 export default RegisterForm

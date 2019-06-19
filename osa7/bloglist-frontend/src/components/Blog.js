@@ -1,18 +1,13 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react'
+import { withRouter } from 'react-router-dom'
 
 
-const fullDetails = (user, blog, handleLikeButtonClick, handleRemoveButtonClick) => (
-  <div>
-    {blog.url}<br />
-    {blog.likes} likes <button onClick={() => handleLikeButtonClick(blog)}>like</button><br />
-    Added by {blog.user.username} <br />
-    {(blog.user.username === user.username) && <button onClick={() => handleRemoveButtonClick(blog.id, blog.title)}>remove</button>}
-  </div>
-)
+const Blog = (props) => {
 
-const Blog = ({ blog, user, handleLikeButtonClick, handleRemoveButtonClick }) => {
-  const [showDetails, setShowDetails] = useState(false)
+  const handleClick = id => {
+    props.history.push(`/blogs/${id}`)
+  }
 
   const blogStyle = {
     paddingTop: 10,
@@ -24,10 +19,9 @@ const Blog = ({ blog, user, handleLikeButtonClick, handleRemoveButtonClick }) =>
 
   return (
     <div style={blogStyle} className="blog">
-      <a className="clickable-tag" onClick={() => setShowDetails(!showDetails)} >{blog.title} {blog.author}</a> <br />
-      {showDetails && fullDetails(user, blog, handleLikeButtonClick, handleRemoveButtonClick)}
+      <a className="clickable-tag" onClick={() => handleClick(props.blog.id)}>{props.blog.title} {props.blog.author}</a> <br />
     </div>
   )
 }
 
-export default Blog
+export default withRouter(Blog)

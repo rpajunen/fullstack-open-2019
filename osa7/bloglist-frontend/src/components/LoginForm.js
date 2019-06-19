@@ -1,13 +1,27 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react'
-import PropTypes from 'prop-types'
 
-const LoginForm = ({ handleSubmit }) => {
+const LoginForm = ({ username, password, loginUser, setNotification }) => {
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      loginUser({
+        username: event.target.username.value,
+        password: event.target.password.value,
+      })
+    } catch (exception) {
+      setNotification('käyttäjätunnus tai salasana virheellinen', 5)
+    } finally {
+      username.reset()
+      password.reset()
+    }
+  }
+
   return (
     <div>
       <h2>Kirjaudu</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin}>
         <div>
           käyttäjätunnus <input type='text' name='username' />
         </div>
@@ -18,10 +32,6 @@ const LoginForm = ({ handleSubmit }) => {
       </form>
     </div>
   )
-}
-
-LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired
 }
 
 export default LoginForm
