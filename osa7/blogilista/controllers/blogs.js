@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const Comment = require('../models/comment')
 const jwt = require('jsonwebtoken')
 
 const getTokenFrom = request => {
@@ -117,5 +118,38 @@ blogsRouter.put('/:id', async (request, response, next) => {
     next(exception)
   }
 })
+
+blogsRouter.post('/:id/comments', async (request, response, next) => {
+  const body = request.body
+  const id = request.params.id
+  const comment = new Comment({
+    blogId: id,
+    comment: body.comment
+  })
+
+  try {
+    const savedComment = await comment.save()
+    response.json(savedComment.toJSON())
+  } catch (exception) {
+    next(exception)
+  }
+})
+
+blogsRouter.get('/:id/comments', async (request, response, next) => {
+  const id = request.params.id
+
+  try {
+    const comments = await Comment
+    .find({blogId: id})
+    if (comments) {
+      response.json(comments)
+    } else {
+      response.status(404).end()
+    }
+  } catch (exception) {
+    next(exception)
+  }
+})
+
 
 module.exports = blogsRouter
