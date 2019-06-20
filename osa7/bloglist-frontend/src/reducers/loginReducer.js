@@ -3,21 +3,17 @@ import blogService from '../services/blogs'
 
 export const loginUser = credentials => {
   return async dispatch => {
-    try {
-      const user = await loginService.login(credentials)
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
+    const user = await loginService.login(credentials)
+    window.localStorage.setItem(
+      'loggedBlogappUser', JSON.stringify(user)
+    )
 
-      blogService.setToken(user.token)
+    blogService.setToken(user.token)
 
-      dispatch({
-        type: 'LOGIN',
-        data: user
-      })
-    } catch (e) {
-      console.log('error')
-    }
+    dispatch({
+      type: 'LOGIN',
+      data: user
+    })
   }
 }
 

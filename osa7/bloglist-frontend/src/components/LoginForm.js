@@ -1,19 +1,28 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react'
+import { connect } from 'react-redux'
 
-const LoginForm = ({ username, password, loginUser, setNotification }) => {
+import { setNotification } from '../reducers/notificationReducer'
+import { loginUser } from '../reducers/loginReducer'
+
+const mapDispatchToProps = {
+  setNotification,
+  loginUser
+}
+
+const LoginForm = (props) => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      loginUser({
+      props.loginUser({
         username: event.target.username.value,
         password: event.target.password.value,
       })
     } catch (exception) {
-      setNotification('käyttäjätunnus tai salasana virheellinen', 5)
+      props.setNotification('käyttäjätunnus tai salasana virheellinen', 5)
     } finally {
-      username.reset()
-      password.reset()
+      props.username.reset()
+      props.password.reset()
     }
   }
 
@@ -34,4 +43,4 @@ const LoginForm = ({ username, password, loginUser, setNotification }) => {
   )
 }
 
-export default LoginForm
+export default connect(null, mapDispatchToProps)(LoginForm)

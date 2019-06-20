@@ -33,6 +33,7 @@ const mapDispatchToProps = {
 
 const App = (props) => {
   const [blogs, setBlogs] = useState([])
+  const [comments, setComments] = useState([])
 
   const registerName = useField('text')
   const registerUsername = useField('text')
@@ -80,7 +81,6 @@ const App = (props) => {
               <h1>Blogs</h1>
               <LoginForm
                 loginUser={props.loginUser}
-                setNotification={props.setNotification}
                 username={username}
                 password={password}
               />
@@ -108,7 +108,9 @@ const App = (props) => {
                 url={url} />} />
               <Route exact path="/users" render={() => <Users blogs={blogs} />} />
               <Route exact path="/users/:id" render={({ match }) =>
-                <User user={userById(match.params.id, blogs)} blogs={blogsById(match.params.id, blogs)} />
+                <User
+                  user={userById(match.params.id, blogs)}
+                  blogs={blogsById(match.params.id, blogs)} />
               } />
               <Route exact path="/blogs/:id" render={({ match }) =>
                 <BlogView
@@ -116,7 +118,9 @@ const App = (props) => {
                   blog={blogByBlogId(match.params.id, blogs)}
                   blogs={blogs}
                   setBlogs={setBlogs}
-                  setNotification={setNotification} />
+                  comments={comments}
+                  setComments={setComments}
+                />
               } />
             </div>
           }
