@@ -1,26 +1,35 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
+
 import Blog from '../components/Blog'
 import BlogForm from '../components/BlogForm'
-import blogService from '../services/blogs'
 import Togglable from '../components/Togglable'
 
+import blogService from '../services/blogs'
+
+import { setBlogs } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const mapDispatchToProps = {
-  setNotification
+  setNotification,
+  setBlogs
 }
 
-const HomeView = ({ setNotification, user, title, author, url, setBlogs, blogs, handleLikeButtonClick, handleRemoveButtonClick }) => {
-  const sortedBlogs = (blogs) => {
-    const blogComponents = blogs.map(blog =>
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+    blogs: state.blogs
+  }
+}
+
+const HomeView = (props) => {
+  const sortedBlogs = () => {
+    const blogComponents = props.blogs.map(blog =>
       <Blog
         key={blog.id}
         blog={blog}
-        user={user}
-        handleLikeButtonClick={handleLikeButtonClick}
-        handleRemoveButtonClick={handleRemoveButtonClick} />
+        user={props.user} />
     )
     return (
       <div style={{ marginBottom: '40px' }}>
@@ -45,37 +54,34 @@ const HomeView = ({ setNotification, user, title, author, url, setBlogs, blogs, 
     event.preventDefault()
 
     const newBlogObject = {
-      title: title.value,
-      author: author.value,
-      url: url.value,
+      title: event.target.title.value,
+      author: event.target.author.value,
+      url: event.target.url.value,
       likes: 0
     }
 
+    event.target.title.value = ''
+    event.target.author.value = ''
+    event.target.url.value = ''
+
     try {
       const newBlog = await blogService.createNew(newBlogObject)
-      setBlogs(blogs.concat(newBlog))
-      title.reset('')
-      author.reset('')
-      url.reset('')
-      setNotification(`uusi blogi lisatty: ${newBlog.title}`, 5)
+      props.setBlogs(props.blogs.concat(newBlog))
+      props.setNotification(`uusi blogi lisatty: ${newBlog.title}`, 5)
     } catch (e) {
-      setNotification('error creating blog', 5)
+      props.setNotification('error creating blog', 5)
     }
   }
+
   return (
     <div>
       <div>
         <Togglable buttonLabel="create">
-          <BlogForm
-            onSubmit={handleBlogFormSubmit}
-            title={title}
-            author={author}
-            url={url}
-          />
+          <BlogForm onSubmit={handleBlogFormSubmit} />
         </Togglable>
-        {sortedBlogs(blogs)}
+        {sortedBlogs(props.blogs)}
       </div>
     </div>
   )
 }
-export default connect(null, mapDispatchToProps)(HomeView)
+export default connect(mapStateToProps, mapDispatchToProps)(HomeView)

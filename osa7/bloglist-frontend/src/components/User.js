@@ -1,4 +1,13 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { blogsById, userById } from '../utils/helper'
+
+const mapStateToProps = (state, props) => {
+  return {
+    blogs: blogsById(props.id, state.blogs),
+    user: userById(props.id, state.blogs)
+  }
+}
 
 const User = (props) => {
   if (props.user === null) {
@@ -16,4 +25,4 @@ const User = (props) => {
   )
 }
 
-export default User
+export default connect(mapStateToProps, null)(User)

@@ -1,8 +1,14 @@
 import React from 'react'
 import { BrowserRouter as Router, withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+
+const mapStateToProps = (state) => {
+  return {
+    blogs: state.blogs
+  }
+}
 
 const Users = (props) => {
-
   const users = props.blogs.reduce((unique, item) => {
     return unique.some(user => user.id === item.user.id) ? unique : [...unique, item.user]
   }, [])
@@ -33,4 +39,4 @@ const Users = (props) => {
   )
 }
 
-export default withRouter(Users)
+export default withRouter(connect(mapStateToProps, null)(Users))

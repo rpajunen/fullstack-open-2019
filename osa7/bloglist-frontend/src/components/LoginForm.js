@@ -13,11 +13,6 @@ const mapDispatchToProps = {
 }
 
 const LoginForm = (props) => {
-
-  // const pushToRegister = id => {
-  //   props.history.push(`/blogs/${id}`)
-  // }
-
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -27,9 +22,6 @@ const LoginForm = (props) => {
       })
     } catch (exception) {
       props.setNotification('käyttäjätunnus tai salasana virheellinen', 5)
-    } finally {
-      props.username.reset()
-      props.password.reset()
     }
   }
 

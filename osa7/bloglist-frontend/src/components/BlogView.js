@@ -6,9 +6,20 @@ import blogService from '../services/blogs'
 import { setNotification } from '../reducers/notificationReducer'
 
 import Comments from '../components/Comments'
+import { blogByBlogId } from '../utils/helper'
+import { setBlogs } from '../reducers/blogReducer'
+
+const mapStateToProps = (state, props) => {
+  return {
+    user: state.user,
+    blogs: state.blogs,
+    blog: blogByBlogId(props.id, state.blogs)
+  }
+}
 
 const mapDispatchToProps = {
-  setNotification
+  setNotification,
+  setBlogs
 }
 
 const BlogView = (props) => {
@@ -67,4 +78,4 @@ const BlogView = (props) => {
   )
 }
 
-export default connect(null, mapDispatchToProps)(BlogView)
+export default connect(mapStateToProps, mapDispatchToProps)(BlogView)
