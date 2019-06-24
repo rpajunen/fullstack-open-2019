@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
+import { Table } from 'semantic-ui-react'
 import Blog from '../components/Blog'
 import BlogForm from '../components/BlogForm'
 import blogService from '../services/blogs'
@@ -22,7 +22,24 @@ const HomeView = ({ setNotification, user, title, author, url, setBlogs, blogs, 
         handleLikeButtonClick={handleLikeButtonClick}
         handleRemoveButtonClick={handleRemoveButtonClick} />
     )
-    return blogComponents.sort((a, b) => b.props.blog.likes - a.props.blog.likes)
+    return (
+      <div style={{ marginBottom: '40px' }}>
+        <Table striped celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell colSpan='2'>All blogs</Table.HeaderCell>
+            </Table.Row>
+            <Table.Row>
+              <Table.HeaderCell>Title</Table.HeaderCell>
+              <Table.HeaderCell>Author</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {blogComponents.sort((a, b) => b.props.blog.likes - a.props.blog.likes)}
+          </Table.Body>
+        </Table>
+      </div>
+    )
   }
   const handleBlogFormSubmit = async (event) => {
     event.preventDefault()

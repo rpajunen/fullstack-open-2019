@@ -1,20 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Message } from 'semantic-ui-react'
 
 const Notification = (props) => {
-  const style = {
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1
-  }
 
-  return (
-    props.notification !== '' ?
-      <div style={style}>
-        {props.notification}
-      </div> :
-      null
-  )
+  return props.notification !== '' ?
+    <Message>
+      <Message.Header>{props.notification}</Message.Header>
+    </Message> :
+    null
 }
 
 const mapStateToProps = state => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
+import { Card, Icon, Button } from 'semantic-ui-react'
 import blogService from '../services/blogs'
 
 import { setNotification } from '../reducers/notificationReducer'
@@ -37,16 +37,33 @@ const BlogView = (props) => {
   }
 
   if (props.blog === null) {
-    return <p>blog is null</p>
+    return <p>blog removed</p>
   }
   return (
-    <div>
-      <h2>{props.blog.url}</h2>
-      {props.blog.likes} likes <button onClick={() => handleLikeButtonClick(props.blog)}>like</button><br />
-      Added by {props.blog.user.username} <br />
-      {(props.blog.user.username === props.user.username) && <button onClick={() => handleRemoveButtonClick(props.blog.id, props.blog.title)}>remove</button>}
-      <Comments id={props.blog.id}/>
-    </div>
+    <Card>
+      <Card.Content>
+        <Card.Header>{props.blog.title}: <a>{props.blog.url}</a> </Card.Header>
+        <Card.Meta>
+          By: {props.blog.author}
+        </Card.Meta>
+        <Card.Description>
+          {props.blog.likes} likes
+          <Button
+            content='Like'
+            icon='heart'
+            onClick={() => handleLikeButtonClick(props.blog)}
+            size='tiny'
+          />
+          <Comments id={props.blog.id} />
+
+        </Card.Description>
+      </Card.Content>
+      <Card.Content extra>
+        <Icon name='user' />
+        Added by {props.blog.user.username}
+        {(props.blog.user.username === props.user.username) && <Icon style={{ marginLeft: '3px' }} name='remove' onClick={() => handleRemoveButtonClick(props.blog.id, props.blog.title)}></Icon>}
+      </Card.Content>
+    </Card>
   )
 }
 

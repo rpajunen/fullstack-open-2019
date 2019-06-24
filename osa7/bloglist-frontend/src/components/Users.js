@@ -11,10 +11,6 @@ const Users = (props) => {
     return blog.user.name === name ? total + 1 : total
   }, 0)
 
-  const handleClick = id => {
-    props.history.push(`/users/${id}`)
-  }
-
   return (
     <div>
       <Router>
@@ -26,7 +22,7 @@ const Users = (props) => {
                 <td>name</td>
                 <td>blogs created</td>
               </tr>
-              {users.map(user => <tr key={user.id}><td><a onClick={() => handleClick(user.id)}>{user.name}</a></td>
+              {users.map(user => <tr key={user.id}><td><a href={`/users/${user.id}`}>{user.name}</a></td>
                 <td>{numberOfBlogs(user.name)}</td></tr>)}
             </tbody>
 

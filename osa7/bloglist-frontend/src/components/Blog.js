@@ -1,26 +1,18 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react'
+import React from 'react'
 import { withRouter } from 'react-router-dom'
-
+import { Table } from 'semantic-ui-react'
 
 const Blog = (props) => {
-
-  const handleClick = id => {
-    props.history.push(`/blogs/${id}`)
-  }
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
   return (
-    <div style={blogStyle} className="blog">
-      <a className="clickable-tag" onClick={() => handleClick(props.blog.id)}>{props.blog.title} {props.blog.author}</a> <br />
-    </div>
+    <Table.Row>
+      <Table.Cell className="clickable-tag" >
+        <a href={`/blogs/${props.blog.id}`} >{props.blog.title}</a>
+      </Table.Cell>
+      <Table.Cell className="clickable-tag" >
+        {props.blog.author}
+      </Table.Cell>
+    </Table.Row>
   )
 }
 

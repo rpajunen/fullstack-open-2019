@@ -1,15 +1,5 @@
 import blogsService from '../services/blogs'
 
-// const getId = () => (100000 * Math.random()).toFixed(0)
-
-// const asObject = (blog) => {
-//   return {
-//     title: blog.title,
-//     author: blog.author,
-//     url: blog.url
-//   }
-// }
-
 export const like = (blog) => {
   return async dispatch => {
     const updatedBlog = await blogsService.like({ ...blog, votes: blog.votes + 1 })

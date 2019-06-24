@@ -1,11 +1,12 @@
 import React, { useState, useImperativeHandle } from 'react'
+import { Button } from 'semantic-ui-react'
 
 const Togglable = React.forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
-  const buttonStyle = { marginBottom: '10px' }
+  const buttonStyle = { marginBottom: '10px', marginTop: '10px' }
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -20,11 +21,11 @@ const Togglable = React.forwardRef((props, ref) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button style={buttonStyle} onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <Button primary style={buttonStyle} onClick={toggleVisibility}>{props.buttonLabel}</Button>
       </div>
       <div style={showWhenVisible}>
         {props.children}
-        <button style={buttonStyle} onClick={toggleVisibility}>cancel</button>
+        <Button negative style={buttonStyle} onClick={toggleVisibility}>cancel</Button>
       </div>
     </div>
   )

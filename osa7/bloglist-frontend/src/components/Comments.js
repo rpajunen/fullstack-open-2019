@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
+import { Input, Form, Button } from 'semantic-ui-react'
 
 import blogService from '../services/blogs'
 
@@ -35,15 +36,15 @@ const Comments = (props) => {
   }
 
   return (
-    <div>
-      <h2>Comments</h2>
-      <form onSubmit={onSubmit}>
-        <input type='text' name='comment' />
-        <button type='submit'>add comment</button>
-      </form>
+    <div style={{ marginTop: '5px' }}>
+      Comments:
       <ul>
         {comments.map(comment => <li key={comment.id}>{comment.comment}</li>)}
       </ul>
+      <Form onSubmit={onSubmit}>
+        <Input type='text' name='comment' />
+        <Button type='submit'>add comment</Button>
+      </Form>
     </div>
   )
 }
