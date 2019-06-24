@@ -42,7 +42,7 @@ const BlogView = (props) => {
   return (
     <Card>
       <Card.Content>
-        <Card.Header>{props.blog.title}: <a>{props.blog.url}</a> </Card.Header>
+        <Card.Header>{props.blog.title}: {props.blog.url} </Card.Header>
         <Card.Meta>
           By: {props.blog.author}
         </Card.Meta>

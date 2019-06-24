@@ -17,24 +17,27 @@ import blogService from './services/blogs'
 
 import { setNotification } from './reducers/notificationReducer'
 import { loginUser, setUser } from './reducers/loginReducer'
+import { getBlogs, setBlogs } from './reducers/blogReducer'
 
 import { useField } from './hooks'
 import { blogsById, userById, blogByBlogId } from './utils/helper'
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    blogs: state.blogs
   }
 }
 
 const mapDispatchToProps = {
   setNotification,
   loginUser,
-  setUser
+  setUser,
+  getBlogs,
+  setBlogs
 }
 
 const App = (props) => {
-  const [blogs, setBlogs] = useState([])
   const [comments, setComments] = useState([])
 
   const registerName = useField('text')
@@ -51,9 +54,7 @@ const App = (props) => {
   const blogFormRef = React.createRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs => {
-      setBlogs(blogs)
-    })
+    props.getBlogs()
   }, [])
 
   useEffect(() => {
@@ -116,25 +117,25 @@ const App = (props) => {
                 <Route exact path="/" render={() =>
                   <HomeView
                     blogFormRef={blogFormRef}
-                    blogs={blogs}
-                    setBlogs={setBlogs}
+                    blogs={props.blogs}
+                    setBlogs={props.setBlogs}
                     user={props.user}
                     title={title}
                     author={author}
                     url={url} />} />
                 <Route exact path="/users" render={() =>
-                  <Users blogs={blogs} />} />
+                  <Users blogs={props.blogs} />} />
                 <Route exact path="/users/:id" render={({ match }) =>
                   <User
-                    user={userById(match.params.id, blogs)}
-                    blogs={blogsById(match.params.id, blogs)} />
+                    user={userById(match.params.id, props.blogs)}
+                    blogs={blogsById(match.params.id, props.blogs)} />
                 } />
                 <Route exact path="/blogs/:id" render={({ match }) =>
                   <BlogView
                     user={props.user}
-                    blog={blogByBlogId(match.params.id, blogs)}
-                    blogs={blogs}
-                    setBlogs={setBlogs}
+                    blog={blogByBlogId(match.params.id, props.blogs)}
+                    blogs={props.blogs}
+                    setBlogs={props.setBlogs}
                     comments={comments}
                     setComments={setComments}
                   />
