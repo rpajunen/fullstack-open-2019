@@ -140,7 +140,7 @@ blogsRouter.get('/:id/comments', async (request, response, next) => {
 
   try {
     const comments = await Comment
-    .find({blogId: id})
+      .find({ blogId: id })
     if (comments) {
       response.json(comments)
     } else {
