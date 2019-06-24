@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import { Button, Menu, Header, Icon } from 'semantic-ui-react'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { Container, Header } from 'semantic-ui-react'
 
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -12,8 +12,6 @@ import HomeView from './components/HomeView'
 import Users from './components/Users'
 import User from './components/User'
 import NavBar from './components/NavBar'
-
-import { Container } from 'semantic-ui-react'
 
 import blogService from './services/blogs'
 
@@ -48,27 +46,25 @@ const App = (props) => {
 
   return (
     <Container>
-      <div>
-        <Router>
-          <div>
-            <Notification />
-            {props.user === null ?
-              <div>
-                <Route exact path="/" render={() => <LoginForm />} />
-                <Route exact path="/register" render={() => <RegisterForm />} />
-              </div> :
-              <div>
-                <NavBar />
-                <Header as='h1'>Blogs</Header>
-                <Route exact path="/" render={() => <HomeView />} />
-                <Route exact path="/users" render={() => <Users />} />
-                <Route exact path="/users/:id" render={({ match }) => <User id={match.params.id} />} />
-                <Route exact path="/blogs/:id" render={({ match }) => <BlogView id={match.params.id} />} />
-              </div>
-            }
-          </div>
-        </Router>
-      </div>
+      <Router>
+        <div>
+          <Notification />
+          {props.user === null ?
+            <div>
+              <Route exact path="/" render={() => <LoginForm />} />
+              <Route exact path="/register" render={() => <RegisterForm />} />
+            </div> :
+            <div>
+              <NavBar />
+              <Header as='h1'>Blogs</Header>
+              <Route exact path="/" render={() => <HomeView />} />
+              <Route exact path="/users" render={() => <Users />} />
+              <Route exact path="/users/:id" render={({ match }) => <User id={match.params.id} />} />
+              <Route exact path="/blogs/:id" render={({ match }) => <BlogView id={match.params.id} />} />
+            </div>
+          }
+        </div>
+      </Router>
     </Container>
   )
 }
