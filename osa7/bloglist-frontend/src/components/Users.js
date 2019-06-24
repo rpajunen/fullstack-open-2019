@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { Table } from 'semantic-ui-react'
 
 const mapStateToProps = (state) => {
   return {
@@ -22,17 +23,19 @@ const Users = (props) => {
       <Router>
         <div>
           <h2>Users</h2>
-          <table>
-            <tbody>
-              <tr>
-                <td>name</td>
-                <td>blogs created</td>
-              </tr>
+          <Table striped celled>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>User</Table.HeaderCell>
+                <Table.HeaderCell>Number of Blogs</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
               {users.map(user => <tr key={user.id}><td><a href={`/users/${user.id}`}>{user.name}</a></td>
                 <td>{numberOfBlogs(user.name)}</td></tr>)}
-            </tbody>
+            </Table.Body>
 
-          </table>
+          </Table>
         </div>
       </Router>
     </div>

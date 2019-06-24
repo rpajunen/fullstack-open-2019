@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { blogsById, userById } from '../utils/helper'
+import { List, Header } from 'semantic-ui-react'
 
 const mapStateToProps = (state, props) => {
   return {
@@ -15,13 +16,12 @@ const User = (props) => {
   }
 
   return (
-    < div >
-      <h2>{props.user.name}</h2>
-      <h3>added blogs</h3>
-      <ul>
-        {props.blogs.map(blog => <li key={blog.id}>{blog.title}</li>)}
-      </ul>
-    </div >
+    <div>
+      <Header as='h3'>All added blogs by {props.user.name}</Header>
+      <List bulleted>
+        {props.blogs.map(blog => <List.Item key={blog.id}>{blog.title}</List.Item>)}
+      </List>
+    </div>
   )
 }
 
