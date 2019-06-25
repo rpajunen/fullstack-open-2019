@@ -11,7 +11,7 @@ const User = require('../models/user')
 describe('when there is initially one user at db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
-    const user = new User({ username: 'root', password: 'sekret' })
+    const user = new User({ username: 'root', password: 'root' })
     await user.save()
   })
 
@@ -19,9 +19,9 @@ describe('when there is initially one user at db', () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
-      username: 'mluukkai',
-      name: 'Matti Luukkainen',
-      password: 'salainen',
+      username: 'roope',
+      name: 'Roope Pajunen',
+      password: 'roope',
     }
 
     await api
@@ -83,10 +83,10 @@ describe('when there is initially some blogs saved', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
 
-    // const blogObjects = helper.initialBlogs
-    //   .map(blog => new Blog(blog))
-    // const promiseArray = blogObjects.map(blog => blog.save())
-    // await Promise.all(promiseArray)
+    const blogObjects = helper.initialBlogs
+      .map(blog => new Blog(blog))
+    const promiseArray = blogObjects.map(blog => blog.save())
+    await Promise.all(promiseArray)
   })
 
   test('blogs are returned as json', async () => {
@@ -138,12 +138,37 @@ describe('when there is initially some blogs saved', () => {
 
   describe('addition of a new blog', () => {
 
+    let token;
+
+    beforeEach(async () => {
+      await User.deleteMany({})
+
+      const loginUser = {
+        username: 'testi',
+        name: 'tepa testaaja',
+        password: 'testi',
+      }
+
+      await api
+        .post('/api/users')
+        .send(loginUser)
+
+      const response = await api
+        .post('/api/login')
+        .send({
+          "username": "testi",
+          "password": "testi"
+        })
+
+      token = response.body.token
+    })
+
     test('id field is generated', async () => {
       const response = await api.get('/api/blogs')
       expect(response.body[0].id).toBeDefined()
     })
 
-    xtest('can be added', async () => {
+    test('can be added', async () => {
       const newBlog = {
         _id: "5a422bc61b54a671234d17fc",
         title: "Test title",
@@ -155,6 +180,7 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -167,7 +193,7 @@ describe('when there is initially some blogs saved', () => {
       expect(contents).toContain('Test title')
     })
 
-    xtest('like is set to zero', async () => {
+    test('like is set to zero', async () => {
       const newBlog = {
         _id: "5a422bc61b54a671234d17fc",
         title: "Test title",
@@ -179,13 +205,14 @@ describe('when there is initially some blogs saved', () => {
       const addedBlog = await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
 
       expect(addedBlog.body.likes).toBe(0)
     })
 
-    xtest('must contain title', async () => {
+    test('must contain title', async () => {
       const newBlog = {
         _id: "5a422bc61b54a683334d17fc",
         author: "T.W Tester",
@@ -195,11 +222,12 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(400)
     })
 
-    xtest('must contain url', async () => {
+    test('must contain url', async () => {
       const newBlog = {
         _id: "5a422bc61b54a679898d17fc",
         title: "Test title",
@@ -209,29 +237,70 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(400)
     })
   })
 
   describe('deletion of a blog', () => {
-    xtest('succeeds with status code 204 if id is valid', async () => {
-      const blogsAtStart = await helper.blogsInDb()
-      const blogToDelete = blogsAtStart[0]
+
+    let token;
+
+    beforeEach(async () => {
+      await User.deleteMany({})
+
+      const loginUser = {
+        username: 'testi',
+        name: 'tepa testaaja',
+        password: 'testi',
+      }
 
       await api
-        .delete(`/api/blogs/${blogToDelete.id}`)
+        .post('/api/users')
+        .send(loginUser)
+
+      const response = await api
+        .post('/api/login')
+        .send({
+          "username": "testi",
+          "password": "testi"
+        })
+
+      token = response.body.token
+    })
+
+    test('succeeds with status code 204 if id is valid', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+
+      const newBlog = {
+        _id: "5a422bc61b54a671234d17fc",
+        title: "Test title",
+        author: "T.W Tester",
+        url: "http://blog.test.html",
+        likes: 0,
+        __v: 0
+      }
+
+      const response = await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      await api
+        .delete(`/api/blogs/${response.body.id}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(204)
 
       const blogsAtEnd = await helper.blogsInDb()
 
-      expect(blogsAtEnd.length).toBe(
-        helper.initialBlogs.length - 1
-      )
+      expect(blogsAtEnd.length).toBe(blogsAtStart.length)
 
       const contents = blogsAtEnd.map(blog => blog.title)
 
-      expect(contents).not.toContain(blogToDelete.title)
+      expect(contents).not.toContain(response.body.title)
     })
   })
 
@@ -250,7 +319,7 @@ describe('when there is initially some blogs saved', () => {
 
       expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
       expect(updatedBlog.body.likes).toBe(blogsAtEnd[0].likes)
-      expect(updatedBlog.body.likes).toBe(99)
+      expect(updatedBlog.body.likes).toBe(100)
     })
   })
 })
