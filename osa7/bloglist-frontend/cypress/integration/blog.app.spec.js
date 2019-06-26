@@ -1,5 +1,29 @@
 /* eslint-disable no-undef */
 
+function login() {
+  cy.get('#username')
+    .type('cyusername')
+  cy.get('#password')
+    .type('cypassword')
+  cy.get('#login')
+    .click()
+  cy.contains('Cypress tester logged in')
+}
+
+function createBlog() {
+  cy.get('#create-blog')
+    .click()
+  cy.get('#title')
+    .type('testing blog')
+  cy.get('#author')
+    .type('william w. tester')
+  cy.get('#url')
+    .type('www.cytest.com')
+  cy.get('#submit')
+    .click()
+  cy.contains('testing blog')
+  cy.contains('william w. tester')
+}
 
 describe('Blog app', function () {
   beforeEach(function () {
@@ -33,13 +57,11 @@ describe('Blog app', function () {
   })
 
   it('user can login', function () {
-    cy.get('#username')
-      .type('cyusername')
-    cy.get('#password')
-      .type('cypassword')
-    cy.get('#login')
-      .click()
-    cy.contains('Cypress tester logged in')
+    login()
   })
 
+  it('user can add new blog', function () {
+    login()
+    createBlog()
+  })
 })

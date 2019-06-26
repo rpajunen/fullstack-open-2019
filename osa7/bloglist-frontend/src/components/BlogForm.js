@@ -13,6 +13,7 @@ const BlogForm = ({ onSubmit, title, author, url }) => (
         <Form size='large' onSubmit={onSubmit}>
           <Segment>
             <Form.Input
+              id='title'
               fluid
               icon='header'
               iconPosition='left'
@@ -20,6 +21,7 @@ const BlogForm = ({ onSubmit, title, author, url }) => (
               name='title'
               {..._.omit(title, ['reset'])} />
             <Form.Input
+              id='author'
               fluid
               icon='book'
               iconPosition='left'
@@ -27,13 +29,19 @@ const BlogForm = ({ onSubmit, title, author, url }) => (
               name='author'
               {..._.omit(author, ['reset'])} />
             <Form.Input
+              id='url'
               fluid
               icon='pencil alternate'
               iconPosition='left'
               placeholder='Url'
               name='url'
               {..._.omit(url, ['reset'])} />
-            <Button primary fluid size='large' type='submit'>
+            <Button
+              id='submit'
+              primary
+              fluid
+              size='large'
+              type='submit'>
               Create
             </Button>
           </Segment>
