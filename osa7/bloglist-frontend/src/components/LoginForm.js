@@ -33,8 +33,15 @@ const LoginForm = (props) => {
         </Header>
         <Form size='large' onSubmit={handleLogin}>
           <Segment stacked>
-            <Form.Input name='username' fluid icon='user' iconPosition='left' placeholder='username' />
             <Form.Input
+              id='username'
+              name='username'
+              fluid icon='user'
+              iconPosition='left'
+              placeholder='username'
+            />
+            <Form.Input
+              id='password'
               fluid
               icon='lock'
               iconPosition='left'
@@ -43,13 +50,13 @@ const LoginForm = (props) => {
               name='password'
             />
 
-            <Button color='teal' fluid size='large' type='submit'>
+            <Button id='login' color='teal' fluid size='large' type='submit'>
               Login
             </Button>
           </Segment>
         </Form>
         <Message>
-          New to us? <a href='register'>Sign Up</a>
+          New to us? <a href='register' id='register'>Sign Up</a>
         </Message>
       </Grid.Column>
     </Grid>

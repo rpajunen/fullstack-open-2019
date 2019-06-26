@@ -36,6 +36,7 @@ const RegisterForm = (props) => {
         <Form size='large' onSubmit={handleRegistration}>
           <Segment stacked>
             <Form.Input
+              id='name'
               fluid
               icon='user'
               iconPosition='left'
@@ -43,6 +44,7 @@ const RegisterForm = (props) => {
               name='name'
               {..._.omit(props.name, ['reset'])} />
             <Form.Input
+              id='username'
               fluid
               icon='user'
               iconPosition='left'
@@ -50,6 +52,7 @@ const RegisterForm = (props) => {
               name='username'
               {..._.omit(props.username, ['reset'])} />
             <Form.Input
+              id='password'
               fluid
               icon='lock'
               iconPosition='left'
@@ -57,7 +60,7 @@ const RegisterForm = (props) => {
               type='password'
               name='password'
               {..._.omit(props.password, ['reset'])} />
-            <Button color='teal' fluid size='large' type='submit'>
+            <Button id='registerButton' color='teal' fluid size='large' type='submit'>
               Register
             </Button>
           </Segment>
