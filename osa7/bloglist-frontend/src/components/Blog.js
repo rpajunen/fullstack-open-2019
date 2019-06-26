@@ -6,10 +6,10 @@ import { Table } from 'semantic-ui-react'
 const Blog = (props) => {
   return (
     <Table.Row>
-      <Table.Cell className="clickable-tag" >
-        <a href={`/blogs/${props.blog.id}`} >{props.blog.title}</a>
+      <Table.Cell className="title-cell" >
+        <a className="blog-link" href={`/blogs/${props.blog.id}`} >{props.blog.title}</a>
       </Table.Cell>
-      <Table.Cell className="clickable-tag" >
+      <Table.Cell className="author-cell" >
         {props.blog.author}
       </Table.Cell>
     </Table.Row>

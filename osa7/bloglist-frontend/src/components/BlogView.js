@@ -51,7 +51,7 @@ const BlogView = (props) => {
     return <p>blog removed</p>
   }
   return (
-    <Card>
+    <Card className='card'>
       <Card.Content>
         <Card.Header>{props.blog.title}: {props.blog.url} </Card.Header>
         <Card.Meta>

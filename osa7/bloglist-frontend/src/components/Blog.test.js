@@ -1,7 +1,8 @@
 import React from 'react'
 import 'jest-dom/extend-expect'
-import { render, cleanup, fireEvent } from '@testing-library/react'
+import { render, cleanup } from '@testing-library/react'
 import Blog from './Blog'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 afterEach(cleanup)
 
@@ -24,23 +25,18 @@ describe('<Blog />', () => {
 
   beforeEach(() => {
     component = render(
-      <Blog blog={blog} user={user}></Blog>
+      <Router>
+        <Blog blog={blog} user={user}></Blog>
+      </Router>
     )
   })
 
   it('at start title and author are displayed', () => {
-    const div = component.container.querySelector('.blog')
+    const titleCell = component.container.querySelector('.title-cell')
+    expect(titleCell).toHaveTextContent('blogin title')
 
-    expect(div).toHaveTextContent('blogin title tepa testaaja')
-  })
-
-  it('after clicking the a tag, likes are displayed', () => {
-    const button = component.container.querySelector('.clickable-tag')
-
-    fireEvent.click(button)
-
-    const div = component.container.querySelector('.blog')
-    expect(div).toHaveTextContent('blogin title tepa testaaja 12 likes likeAdded by remove')
+    const authorCell = component.container.querySelector('.author-cell')
+    expect(authorCell).toHaveTextContent('tepa testaaja')
   })
 
 })
